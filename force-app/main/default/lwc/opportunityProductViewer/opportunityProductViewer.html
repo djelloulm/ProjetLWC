@@ -1,0 +1,49 @@
+<template>
+    <lightning-card variant="Narrow" title={customlabelTitle} icon-name="standard:opportunity">
+        
+        <!-- Message d'alerte en cas de rupture de stock -->
+        <template if:true={messageQuantite}>
+            <div class="slds-box slds-theme_warning slds-theme_alert-texture slds-m-around_medium slds-text-align_center">
+                <lightning-icon icon-name="utility:warning" alternative-text="Avertissement" size="small" class="slds-m-right_x-small"></lightning-icon>
+                <p class="slds-text-heading_small">
+                </p>
+                <p>
+                    <lightning-formatted-rich-text value={messagelabelQuantite}></lightning-formatted-rich-text>
+                </p>
+            </div>
+        </template>
+
+        <!-- Affichage des produits s'il y en a -->
+        <template if:true={opportunities}>
+            <template if:false={noProducts}>
+                <lightning-datatable 
+                    data={opportunities}
+                    columns={columns}
+                    key-field="Id"
+                    onrowaction={handleRowLevelAct}
+                    class="slds-p-around_none slds-m-around_none slds-card__body slds-border_none">
+                </lightning-datatable>
+            </template>
+
+            <!-- Spinner -->
+            <template if:true={showLoadingSpinner}>
+                <lightning-spinner alternative-text="Chargement en cours" size="large"></lightning-spinner>
+            </template>
+        </template>
+
+        <!-- Affichage du message lorsqu'il n'y a pas de produits associés -->
+        <template if:true={noProducts}>
+            <div class="slds-p-around_medium">
+                <lightning-formatted-rich-text value={messageProduit}></lightning-formatted-rich-text>
+            </div>
+        </template>
+
+        <!-- Affichage de l'erreur si le chargement des données échoue -->
+        <template if:true={error}>
+            <div class="slds-p-around_medium">
+                <p class="slds-text-color_error">Une erreur est survenue lors du chargement des données. Veuillez réessayer plus tard.</p>
+            </div>
+        </template>
+        
+    </lightning-card>
+</template>
