@@ -5,8 +5,6 @@
         <template if:true={messageQuantite}>
             <div class="slds-box slds-theme_warning slds-theme_alert-texture slds-m-around_medium slds-text-align_center">
                 <lightning-icon icon-name="utility:warning" alternative-text="Avertissement" size="small" class="slds-m-right_x-small"></lightning-icon>
-                <p class="slds-text-heading_small">
-                </p>
                 <p>
                     <lightning-formatted-rich-text value={messagelabelQuantite}></lightning-formatted-rich-text>
                 </p>
@@ -26,9 +24,7 @@
             </template>
 
             <!-- Spinner -->
-            <template if:true={showLoadingSpinner}>
-                <lightning-spinner alternative-text="Chargement en cours" size="large"></lightning-spinner>
-            </template>
+                <lightning-spinner alternative-text="Chargement en cours" size="large" if:true={showLoadingSpinner}></lightning-spinner>
         </template>
 
         <!-- Affichage du message lorsqu'il n'y a pas de produits associés -->

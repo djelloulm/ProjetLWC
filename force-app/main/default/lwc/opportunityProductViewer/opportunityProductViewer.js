@@ -98,7 +98,7 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
 
                 return {
                     ...elem,
-                    quantityClass: elem.Out_of_Stock__c ? 'slds-text-color_error' : 'slds-text-color_success',
+                    quantityClass: elem.Out_of_Stock__c ? 'slds-box slds-theme_shade slds-theme_alert-texture slds-text-color_error' : 'slds-text-color_success',
                     'Product2.Name': elem.Product2?.Name, 
                     'TotalPrice': elem.TotalPrice,
                     'Quantity': elem.Quantity,
