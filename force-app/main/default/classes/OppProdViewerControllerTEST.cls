@@ -28,7 +28,6 @@ private class OppProdViewerControllerTEST {
         
         Test.stopTest(); // Fin du test unitaire
     }
-
     // Test de la méthode getUserProfileNameController() qui retourne le nom du profil de l'utilisateur connecté
     @isTest(SeeAllData=true)
     private static void getUserProfileNameControllerTEST() {
@@ -42,7 +41,6 @@ private class OppProdViewerControllerTEST {
         
         Test.stopTest(); // Fin du test
     }
-
     // Test de l'instanciation du contrôleur OppProdViewerController
     @isTest
     private static void OppProdViewerControllerTEST() {

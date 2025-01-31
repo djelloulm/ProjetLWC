@@ -1,4 +1,5 @@
 <template>
+    <!-- Carte affichant les opportunités de produits -->
     <lightning-card variant="Narrow" title={customlabelTitle} icon-name="standard:opportunity">
         
         <!-- Message d'alerte en cas de rupture de stock -->
@@ -14,6 +15,7 @@
         <!-- Affichage des produits s'il y en a -->
         <template if:true={opportunities}>
             <template if:false={noProducts}>
+                <!-- Tableau des produits liés à l'opportunité -->
                 <lightning-datatable 
                     data={opportunities}
                     columns={columns}
@@ -23,8 +25,8 @@
                 </lightning-datatable>
             </template>
 
-            <!-- Spinner -->
-                <lightning-spinner alternative-text="Chargement en cours" size="large" if:true={showLoadingSpinner}></lightning-spinner>
+            <!-- Spinner affiché lors du chargement des données -->
+            <lightning-spinner alternative-text="Chargement en cours" size="large" if:true={showLoadingSpinner}></lightning-spinner>
         </template>
 
         <!-- Affichage du message lorsqu'il n'y a pas de produits associés -->

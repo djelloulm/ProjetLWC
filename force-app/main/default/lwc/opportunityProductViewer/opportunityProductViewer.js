@@ -18,19 +18,19 @@ import messageQuantite from '@salesforce/label/c.messageErreurQuantite';
 import adminProfilName from '@salesforce/label/c.Profil_Name';
 
 export default class OpportunityProductViewer extends NavigationMixin(LightningElement) {
-    @api recordId;
-    @track opportunities;
-    @track error;
-    @track showLoadingSpinner = false;
-    @track isAdmin = false; // Vérification du profil admin
+    @api recordId; // ID de l'opportunité
+    @track opportunities; // Liste des opportunités avec leurs produits
+    @track error; // Gestion des erreurs
+    @track showLoadingSpinner = false; // Affichage du spinner de chargement
+    @track isAdmin = false; // Vérification si l'utilisateur est un admin
     @track messageQuantite = false; // Affichage du message de rupture de stock
-    @track adminProfilName = false; // custom label pour le nom du profil
+    @track adminProfilName = false; // Stocke le nom du profil admin
 
     messageProduit = pasdeProduitMessage;
     customlabelTitle = customTitle;
     messagelabelQuantite = messageQuantite;
 
-    // Définition des colonnes pour le tableau
+    // Définition des colonnes affichées dans le tableau
     columns = [
         { label: nomduProduit, fieldName: 'Product2.Name', type: 'text' }, 
         {   
@@ -38,7 +38,7 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
             fieldName: 'Quantity', 
             type: 'number',
             cellAttributes: { 
-                class: { fieldName: 'quantityClass' } // Application de classe couleur dynamique
+                class: { fieldName: 'quantityClass' } // Ajout de classes CSS dynamiques
             }
         },   
         { label: prixTotal, fieldName: 'TotalPrice', type: 'currency' },
@@ -65,13 +65,14 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
         }
     ];
 
-    // Vérification du profil utilisateur
+    // Vérifie le profil utilisateur et ajuste l'affichage si nécessaire
     @wire(getUserProfileNameController)
     wiredActivities({ error, data }) {
         if (data) {
             this.isAdmin = (data === adminProfilName);
             this.error = undefined;
 
+            // Si l'utilisateur n'est pas admin, on enlève la colonne "Voir produit"
             if (!this.isAdmin) {
                 this.columns = this.columns.filter(col => col.label !== voirProduit);
             }
@@ -81,19 +82,19 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
         }
     }
 
-    // Récupération des opportunités et application des styles + message de rupture
+    // Récupère les opportunités et applique les styles en fonction du stock
     @wire(getOpportunities, { opportunityId: "$recordId" })
     wiredOpportunities(result) {
         this.wiredResult = result;
 
         if (result.data) {
-            let hasOutOfStock = false; // Variable pour suivre la rupture de stock
+            let hasOutOfStock = false; // Vérifie si un produit est en rupture
 
             this.opportunities = result.data.map((elem) => {
                 console.log(`Produit: ${elem.Product2?.Name}, Out_of_Stock__c: ${elem.Out_of_Stock__c}`); // Debug
 
                 if (elem.Out_of_Stock__c) {
-                    hasOutOfStock = true; // Il y a une rupture de stock
+                    hasOutOfStock = true;
                 }
 
                 return {
@@ -107,24 +108,24 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
                 };
             });
 
-            this.messageQuantite = hasOutOfStock; // Active le message si nécessaire
+            this.messageQuantite = hasOutOfStock; // Active le message si besoin
             this.noProducts = this.opportunities.length === 0;
             this.error = undefined;
         } else if (result.error) {
             this.error = result.error;
             this.opportunities = undefined;
-            this.messageQuantite = false; // Désactive le message en cas d'erreur
+            this.messageQuantite = false; 
             this.noProducts = false;
         }
     }
 
-    // Gestion des actions (Visualiser et Supprimer)
+    // Gestion des actions utilisateur (Voir ou Supprimer un produit)
     handleRowLevelAct(event) {
         const recordId = event.detail.row.Id;
         const actionName = event.detail.action.name;
 
         switch (actionName) {
-            case 'view':
+            case 'view': // Navigation vers l'enregistrement du produit
                 this[NavigationMixin.Navigate]({
                     type: 'standard__recordPage',
                     attributes: {
@@ -135,7 +136,7 @@ export default class OpportunityProductViewer extends NavigationMixin(LightningE
                 });
                 break;
 
-            case 'delete':
+            case 'delete': // Suppression du produit
                 this.showLoadingSpinner = true;
                 deleteRecord(recordId)
                     .then(() => {
