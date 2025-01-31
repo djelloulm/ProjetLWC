@@ -12,7 +12,7 @@ public with sharing class OpportunityProductSelector {
 
     @AuraEnabled(Cacheable=true)
     public static String getUserProfileName() {
-        // Récupérer l'ID du profil de l'utilisateur connecté
+        // Récupérer le nom du profil de l'utilisateur connecté
         Id profileId = UserInfo.getProfileId();
         String profileName = [SELECT Name FROM Profile WHERE Id = :profileId].Name;
         return profileName;
